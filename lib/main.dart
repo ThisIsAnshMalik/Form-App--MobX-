@@ -29,9 +29,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  TextEditingController _userNameController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordNameController = TextEditingController();
+  final TextEditingController _userNameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordNameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
