@@ -50,7 +50,7 @@ abstract class _FormStore with Store {
 
   @action
   void validateEmail(String value) {
-    if (isEmail(value) || value.isEmpty) {
+    if (!isEmail(value) || value.isEmpty) {
       error.email = "not a valid email";
       return;
     }
