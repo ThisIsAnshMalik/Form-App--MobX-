@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:form_mobx/form/form_store.dart';
 
 void main() {
   runApp(const MyApp());
@@ -35,6 +37,20 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final validation = FormStore();
+
+    @override
+    void initState() {
+      super.initState();
+      validation.setupValidations();
+    }
+
+    @override
+    void dispose() {
+      validation.dispose();
+      super.dispose();
+    }
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -42,38 +58,60 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              TextFormField(
-                controller: _userNameController,
-                decoration: const InputDecoration(
-                    labelText: 'Username', contentPadding: EdgeInsets.all(8)),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(
-                    labelText: 'Email', contentPadding: EdgeInsets.all(8)),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              TextFormField(
-                controller: _passwordNameController,
-                decoration: const InputDecoration(
-                    labelText: 'Password', contentPadding: EdgeInsets.all(8)),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              ElevatedButton(onPressed: (() {}), child: const Text("Sign Up"))
-            ],
-          ),
-        ),
+            padding: const EdgeInsets.all(10.0),
+            child: Observer(
+              builder: (context) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    TextFormField(
+                      onChanged: ((value) {
+                        validation.setUsername(value.toString());
+                      }),
+                      controller: _userNameController,
+                      decoration: InputDecoration(
+                          errorText: validation.error.username,
+                          labelText: 'Username',
+                          contentPadding: const EdgeInsets.all(8)),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    TextFormField(
+                      onChanged: ((value) {
+                        validation.setEmail(value.toString());
+                      }),
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                          errorText: validation.error.email,
+                          labelText: 'Email',
+                          contentPadding: const EdgeInsets.all(8)),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    TextFormField(
+                      onChanged: ((value) {
+                        validation.setPassword(value.toString());
+                      }),
+                      controller: _passwordNameController,
+                      decoration: InputDecoration(
+                          errorText: validation.error.password,
+                          labelText: 'Password',
+                          contentPadding: const EdgeInsets.all(8)),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    ElevatedButton(
+                        onPressed: (() {
+                          validation.validateAll();
+                        }),
+                        child: const Text("Sign Up"))
+                  ],
+                );
+              },
+            )),
       ),
     );
   }
